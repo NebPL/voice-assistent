@@ -120,3 +120,11 @@ INFO:utils.util_logger:Erkannt: hey alexa stillt timer zehn minuten
 INFO:utils.util_logger:Erkannt: timer gestellt für null stunde null minute null sekunden timer ist zu ende
 INFO:utils.util_logger:Erkannt: hey alexa stellt timer zehn sekunden
 INFO:utils.util_logger:Erkannt: hey alexa stellt timer zehn sekunden
+INFO:utils.util_logger:Erkannt: hey alex herstellt timer eine minute
+INFO:utils.util_logger:Erkannt: hey alexa stellt timer eine sie müsse kunde
+INFO:utils.util_logger:Erkannt: hi alexa uhr
+INFO:utils.util_logger:Erkannt: hey alexa uhr
+INFO:utils.util_logger:Erkannt: hey alexa uhr
+INFO:utils.util_logger:Erkannt: hey alexa uhr
+INFO:utils.util_logger:Erkannt: hey alexa uhr
+INFO:utils.util_logger:Erkannt: hey alexa uhr
