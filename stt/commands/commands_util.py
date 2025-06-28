@@ -1,4 +1,12 @@
 from text_to_num import text2num
+import pyttsx3
+
+
+def say(text, speed=175):
+    engine = pyttsx3.init()
+    engine.setProperty('rate', speed)
+    engine.say(text)
+    engine.runAndWait()
 
 
 def SimpleCommand(Trigger, Input, Keywords):
@@ -15,7 +23,7 @@ def SimpleCommand(Trigger, Input, Keywords):
             break
 
 
-def Command(Trigger, Input, Keywords, Infos):
+def command(Trigger, Input, Keywords, Infos):
     if not Keywords:
         print("Add Keywords!")
         return

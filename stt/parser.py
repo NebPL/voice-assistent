@@ -1,14 +1,8 @@
 from text_to_num import text2num
-import threading
-import time
 import pyttsx3
-
 from stt.commands.commandsList import exec_commands
 
-
 engine = pyttsx3.init()
-
-GlobalInput = ""
 callName = "hey alexa"
 
 
@@ -36,7 +30,11 @@ def parse(input):
 
         ergebnis = convert_text2num(ergebnis)
 
-        global GlobalInput
-        GlobalInput = ergebnis
+        ersetzen = {
+            "eine": "1",
+        }
 
-        exec_commands(GlobalInput)
+        for alt, neu in ersetzen.items():
+            ergebnis = ergebnis.replace(alt, neu)
+
+        exec_commands(ergebnis)
