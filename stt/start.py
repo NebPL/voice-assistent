@@ -3,8 +3,8 @@ import sounddevice as sd
 import sys
 import queue
 import json
+from stt.parser import parse
 import utils
-import parser
 
 q = queue.Queue()
 
@@ -35,8 +35,7 @@ with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
             if text:
                 print("Erkant: ", text)
                 utils.util_logger.log("Erkannt: " + text)
-                parser.parse(text)
-
+                parse(text)
 
         else:
             partial_result = rec.PartialResult()

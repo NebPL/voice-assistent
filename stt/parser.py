@@ -1,24 +1,14 @@
+from text_to_num import text2num
 
 # Functionsweise
-
 # Keyword suchen also z.B ["Uhr", "Uhrzeit"], wenn gefunden.
 # Daten nehmen und extrahieren, wenn nichts extrahieren dann einfach function machen
-Input = ""
+GlobalInput = ""
 
 callName = "hey alexa"
 
-def parse(input):
 
-    if callName in input:
-        ergebnis = input.split(callName, 1)[1]
-
-        global Input
-        Input = ergebnis
-        print(ergebnis)
-        
-
-
-def SimpleCommand(Trigger, Keywords=[]):
+def SimpleCommand(Trigger, Input, Keywords):
     if not Keywords:
         print("Add Keywords!")
         pass
@@ -32,81 +22,124 @@ def SimpleCommand(Trigger, Keywords=[]):
             break
 
 
-def Command(Trigger, Keywords=[], Infos=[]):
+def Command(Trigger, Input, Keywords, Infos):
     if not Keywords:
         print("Add Keywords!")
-        pass
+        return
 
     if not Infos:
-        print("Benutzen sie SimpleCommand wenn sie keine Infos benutzen wollen!")
-        pass
+        print("Benutzen Sie SimpleCommand, wenn Sie keine Infos benutzen wollen!")
+        return
 
     for keyword in Keywords:
-        if not keyword in Input:
-            pass
+        if keyword not in Input:
+            print(f"Keyword '{keyword}' nicht im Input.")
+            return
 
     args = []
+    words = Input.split()
 
     for _type, arg1, arg2 in Infos:
-
-        words = Input.split()
-        print(words)
-
         if _type == "s":
+            try:
+                if arg2 == " ":
+                    start = words.index(arg1) + 1
+                    zwischen = words[start:len(words)]
+                    args.append(" ".join(zwischen))
+                else:
+                    start = words.index(arg1) + 1
+                    end = words.index(arg2)
+                    zwischen = words[start:end]
+                    args.append(" ".join(zwischen))
+            except ValueError as e:
+                args.append("__nothing__")
+                # print(
+                #    f"[Fehler - 's'] Wort '{arg1}' oder '{arg2}' nicht im Input gefunden.")
+                # return
 
-            if arg2 == " ":
-                print("test")
-                start = words.index(arg1) + 1
-                zwischen = words[start:len(words)]
-                args.append(zwischen)
-
-            else:
-                start = words.index(arg1) + 1
-                end = words.index(arg2)
-                zwischen = words[start:end]
-                args.append(zwischen)
-
-        if _type == "n":
-            if arg2 == "Left":
-                print("test1")
-                print(Input)
-                if arg1 in words:
-                    print("test2")
-                    index = words.index(arg1)
-
+        elif _type == "n":
+            try:
+                index = words.index(arg1)
+                if arg2 == "Left":
                     if index > 0:
-                        leftNum = words[index-1]
+                        leftNum = words[index - 1]
                         num = int(leftNum)
-                        print(num)
                         args.append(num)
+                    else:
+                        print(f"[Fehler - 'n'] Kein Wort links von '{arg1}'.")
+                        return
 
-            if arg2 == "Right":
-                if arg1 in words:
-                    index = words.index(arg1)
-
-                    if index > 0:
-                        leftNum = words[index+1]
-                        num = int(leftNum)
-                        print(num)
+                elif arg2 == "Right":
+                    if index + 1 < len(words):
+                        rightNum = words[index + 1]
+                        num = int(rightNum)
                         args.append(num)
-            else:
-                pass
+                    else:
+                        print(f"[Fehler - 'n'] Kein Wort rechts von '{arg1}'.")
+                        return
+            except ValueError:
+                args.append(-1)
+                # print(f"[Fehler - 'n'] Wort '{arg1}' nicht im Input gefunden.")
+                # return
+            except Exception as e:
+                print(f"[Fehler - 'n'] {e}")
+                return
+        else:
+            print(f"Unbekannter Info-Typ: {_type}")
+            return
 
-    Trigger(*args)
+    print("Argumente:", args)
+    if len(args) == len(Infos):
+        Trigger(*args)
+    else:
+        print("Fehler: Argumentanzahl stimmt nicht mit Infos überein.")
 
 
-def Test1(input1, input2, input3):
-    print("Der Inputs waren: " + str(input1) + str(input2) + str(input3))
+def Test1():
+    print("jaaaj")
 
 
-Command(Test1,  ["timer"], [("n", "Stunden", "Left"),
-        ("n", "Minuten", "Left"), ("n", "Sekunden", "Left")])
+def Test2(todo):
+    print("Das Todo ist " + todo)
 
 
-def Test2(todo, bis):
-    print("Todo" + str(todo))
-    print("Bis" + str(bis))
+def Test3(stunden, minuten, sekunden):
+    print("Der timer ist: " + str(stunden) + "Stunde(N) " +
+          str(minuten) + "Minute(n) " + str(sekunden) + "Sekunde(n)")
+    pass
 
 
-Command(Test2,  [
-        "todo"], [("s", "todo", "bis"), ("s", "bis", " ")])
+def convert_text2num(text):
+    try:
+        # Versuche den gesamten Text als Zahl zu interpretieren
+        zahl = text2num(text, "de")
+        return str(zahl)
+    except Exception:
+        # Falls nicht ganze Zahl, dann splitten und Wort für Wort wandeln
+        wörter = text.split()
+        neu = []
+        for w in wörter:
+            try:
+                neu.append(str(text2num(w, "de")))
+            except Exception:
+                neu.append(w)
+        return " ".join(neu)
+
+
+def parse(input):
+    print("Der Input ist: " + input)
+    if callName in input:
+        ergebnis = input.split(callName, 1)[1]
+
+        ergebnis = convert_text2num(ergebnis)
+
+        global GlobalInput
+        GlobalInput = ergebnis
+        print("Das ergebnis: " + ergebnis.strip())
+
+        SimpleCommand(Test1, GlobalInput, ["uhr"])
+
+        Command(Test2,  GlobalInput, [
+            "todo"], [("s", "todo", "hinzu")])
+        Command(Trigger=Test3, Input=GlobalInput, Keywords=[
+                "timer"], Infos=[("n", "stunden", "Left"), ("n", "minuten", "Left"), ("n", "sekunden", "Left")])

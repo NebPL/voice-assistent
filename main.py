@@ -1,11 +1,11 @@
 from threading import Thread
-import utils 
+import utils
 import stt
 
 
-
 def Stt():
-    stt.start #stt = speack to text 
+    stt.start  # stt = speack to text
+
 
 if __name__ == "__main__":
     thread_stt = Thread(target=Stt)
