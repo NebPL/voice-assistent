@@ -24,6 +24,9 @@ def convert_text2num(text):
 
 
 def parse(input):
+    if input == callName:
+        return
+
     print("Der Input ist: " + input)
     if callName in input:
         ergebnis = input.split(callName, 1)[1]

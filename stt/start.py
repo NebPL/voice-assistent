@@ -16,10 +16,10 @@ def callback(indata, frames, time, status):
 
 
 model = vosk.Model(
-    "/Users/ben/home/programming/personal/voice-assisent/stt/vosk-model-small-de-0.15")
+    "/Users/ben/home/programming/personal/voice-assisent/stt/vosk-modle")
 
 
-with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
+with sd.RawInputStream(samplerate=16000, blocksize=4000, dtype='int16',
                        channels=1, callback=callback):
     rec = vosk.KaldiRecognizer(model, 16000)
 

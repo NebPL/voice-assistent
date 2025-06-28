@@ -31,9 +31,6 @@ def Timer(stunden, stunde, minuten, minute, sekunden, sekunde):
     stunden = stunden+stunde
     minuten = minuten+minute
     sekunden = sekunden+sekunde
-    print("Stunden: " + str(stunden))
-    print("Minuten: " + str(minuten))
-    print("Sekunden: " + str(sekunden))
 
     sekunden = stunden*3600+minuten*60+sekunden
 
@@ -48,7 +45,7 @@ def setTimer(sekunden):
         print(i)
         sleep(1)
 
-    WIEDERHOLUNGTIMERENDE = 4
-    for _ in range(WIEDERHOLUNGTIMERENDE):
-        commands_util.say("Timer fertig")
-        sleep(4)
+    commands_util.say("Timer fertig")
+    sleep(4)
+    commands_util.say("Timer fertig")
+    sleep(4)

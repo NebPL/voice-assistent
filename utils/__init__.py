@@ -1,2 +1,1 @@
-from utils import util_logger 
-print("test!!!!")
+from utils import util_logger
