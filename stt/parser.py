@@ -1,4 +1,9 @@
 from text_to_num import text2num
+import threading
+import time
+import pyttsx3
+
+engine = pyttsx3.init()
 
 # Functionsweise
 # Keyword suchen also z.B ["Uhr", "Uhrzeit"], wenn gefunden.
@@ -95,18 +100,54 @@ def Command(Trigger, Input, Keywords, Infos):
         print("Fehler: Argumentanzahl stimmt nicht mit Infos überein.")
 
 
-def Test1():
-    print("jaaaj")
+def Trigertimer(stunden, minuten, sekunden):
+
+    if stunden == -1:
+        stunden = 0
+    if minuten == -1:
+        minuten = 0
+    if sekunden == -1:
+        sekunden = 0
+
+    gesamtSekunden = stunden*3600 + minuten*60 + sekunden
+
+    confirmSentance = "Timer gestellt für"
+
+    if not stunden == -1:
+        if stunden > 1:
+            confirmSentance += str(stunden) + "stunden"
+        else:
+            confirmSentance += str(stunden) + "stunde"
+
+    if not minuten == -1:
+        if minuten > 1:
+            confirmSentance += str(minuten) + "minuten"
+        else:
+            confirmSentance += str(minuten) + "minute"
+    if not sekunden == -1:
+        if sekunden > 1:
+            confirmSentance += str(sekunden) + "sekunden"
+        else:
+            confirmSentance += str(sekunden) + "sekunden"
+
+    engine.setProperty('rate', 175)
+    engine.say(confirmSentance)
+    engine.runAndWait()
+
+    timerThread = threading.Thread(target=timer, args=(gesamtSekunden,))
+    timerThread.start()
 
 
-def Test2(todo):
-    print("Das Todo ist " + todo)
+def timer(sekunden):
+    sekundenTimer = sekunden
 
+    for i in range(sekunden):
+        time.sleep(1)
+        print(i)
 
-def Test3(stunden, minuten, sekunden):
-    print("Der timer ist: " + str(stunden) + "Stunde(N) " +
-          str(minuten) + "Minute(n) " + str(sekunden) + "Sekunde(n)")
-    pass
+    engine.setProperty('rate', 175)
+    engine.say("Timer ist zu ende")
+    engine.runAndWait()
 
 
 def convert_text2num(text):
@@ -133,13 +174,22 @@ def parse(input):
 
         ergebnis = convert_text2num(ergebnis)
 
+
+# Wörter, die ersetzt werden sollen
+        ersetzen = {
+            "eine": "1",
+            "stunde": "stunden",
+            "minute": "minuten",
+            "minute": "minuten",
+        }
+
+# Durch Wörter gehen und ersetzen
+        for alt, neu in ersetzen.items():
+            ergebnis = ergebnis.replace(alt, neu)
+
         global GlobalInput
         GlobalInput = ergebnis
         print("Das ergebnis: " + ergebnis.strip())
 
-        SimpleCommand(Test1, GlobalInput, ["uhr"])
-
-        Command(Test2,  GlobalInput, [
-            "todo"], [("s", "todo", "hinzu")])
-        Command(Trigger=Test3, Input=GlobalInput, Keywords=[
+        Command(Trigger=Trigertimer, Input=GlobalInput, Keywords=[
                 "timer"], Infos=[("n", "stunden", "Left"), ("n", "minuten", "Left"), ("n", "sekunden", "Left")])
